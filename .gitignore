@@ -1,0 +1,26 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Secretos: nunca subir (el .env.example SÍ se sube)
+.env
+
+# Datos generados: se ignora el contenido pero se conservan las carpetas (.gitkeep)
+data/raw/*
+data/processed/*
+data/rejected/*
+!data/**/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editor y sistema
+.vscode/
+Thumbs.db
