@@ -1,30 +1,30 @@
-# Sales ETL: data cleaning with Python, PostgreSQL and Streamlit
+## Database
 
-An ETL pipeline that takes messy sales data (CSV and Excel), cleans it with explicit rules, loads it into PostgreSQL, and shows the result in a dashboard (*Sales Performance Analytics*).
+Run these steps once, as the PostgreSQL admin user (`postgres`). The schema script does not create the users, so they must exist before you run it.
 
-## The problem it solves
+Open a `psql` session:
 
-Real-world data rarely arrives clean. This project starts from synthetic data with errors injected on purpose (generated with Faker, no real people or businesses): 200 customers, 15 products and 1,500 sales.
-
-Errors that are fixed or discarded:
-
-- Empty, non-numeric or duplicated IDs.
-- Names and cities with extra spaces and inconsistent capitalization.
-- Emails with an invalid format.
-- Dates in several formats (`2025-10-28`, `27/04/2025`, `27-04-2025`), before 2020, or in the future.
-- Amounts written in different ways (`COP 22000`, `$25.500`, `125,000`).
-- Quantities that are zero or negative.
-- Sales that point to customers or products that do not exist.
-
-## How it works
-
-```
-extract (CSV/Excel) -> clean -> save results -> load into PostgreSQL -> dashboard
+```powershell
+psql -U postgres
 ```
 
-Design decisions:
+Inside `psql`, create the two users and the database. `\password` asks for the password interactively, so it never ends up in your shell history:
 
-- **One function per cleaning rule**, small and independent, so each one can be tested on its own.
-- **Explicit date formats.** Letting pandas guess can read `10/05/2026` as October 5th; here it is always read as day/month/year.
-- **Anything that cannot be fixed is discarded and stored separately** in `data/rejected/`, together with the reason for the rejection.
-- **Logs only store counts**,
+```sql
+CREATE ROLE etl_user LOGIN;
+CREATE ROLE dashboard_user LOGIN;
+\password etl_user
+\password dashboard_user
+CREATE DATABASE etl_portafolio_db;
+\q
+```
+
+Then create the tables and permissions:
+
+```powershell
+psql -U postgres -d etl_portafolio_db -f sql/01_esquema.sql
+```
+
+Use the two passwords you just chose in your `.env` file (`DB_USER` / `DB_PASSWORD` for the ETL, `DASH_DB_USER` / `DASH_DB_PASSWORD` for the dashboard). The usernames must match the ones above.
+
+Permissions follow least privilege: `etl_user` can read, insert and update but not delete, and `dashboard_user` is read-only and cannot see the `email` column.
