@@ -24,3 +24,4 @@ __pycache__/
 # Editor y sistema
 .vscode/
 Thumbs.db
+.streamlit/secrets.toml
