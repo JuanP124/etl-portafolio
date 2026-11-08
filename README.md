@@ -2,6 +2,16 @@
 
 An ETL pipeline that takes messy sales data (CSV and Excel), cleans it with explicit rules, loads it into PostgreSQL, and shows the result in a dashboard (*Sales Performance Analytics*).
 
+## Dashboard
+
+![Overview tab: KPIs, monthly sales, sales by category and city](docs/dashboard-1.png)
+
+![Customers & Products tab: top 10 customers and products](docs/dashboard-2.png)
+
+![Details tab: most recent transactions](docs/dashboard-3.png)
+
+*All data shown is synthetic.*
+
 ## The problem it solves
 
 Real-world data rarely arrives clean. This project starts from synthetic data with errors injected on purpose (generated with Faker, no real people or businesses): 200 customers, 15 products and 1,500 sales.
